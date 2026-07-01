@@ -1,0 +1,12 @@
+# Build output and deps
+node_modules/
+dist/
+.turbo/
+coverage/
+
+# Lockfiles and generated changelogs
+pnpm-lock.yaml
+**/CHANGELOG.md
+
+# Minified / vendored
+*.min.js

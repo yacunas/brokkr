@@ -86,7 +86,11 @@ export function createVault<T extends Identifiable>(
   return {
     async findById(id) {
       const rows = rowsOf(
-        await db.select().from(table).where(eq(idColumn, id as never)).limit(1),
+        await db
+          .select()
+          .from(table)
+          .where(eq(idColumn, id as never))
+          .limit(1),
       );
       const row = rows[0];
       return row ? toEntity(row) : null;
@@ -102,9 +106,7 @@ export function createVault<T extends Identifiable>(
     async list(filter = {}, page: OffsetPage = {}) {
       const { limit = 50, offset = 0 } = page;
       const where = buildWhere(columns, filter as Record<string, unknown>);
-      const rows = rowsOf(
-        await db.select().from(table).where(where).limit(limit).offset(offset),
-      );
+      const rows = rowsOf(await db.select().from(table).where(where).limit(limit).offset(offset));
       return rows.map(toEntity);
     },
 
@@ -143,7 +145,10 @@ export function createVault<T extends Identifiable>(
     async count(filter = {}) {
       const where = buildWhere(columns, filter as Record<string, unknown>);
       const rows = rowsOf(
-        await db.select({ count: sql<number>`count(*)::int` }).from(table).where(where),
+        await db
+          .select({ count: sql<number>`count(*)::int` })
+          .from(table)
+          .where(where),
       );
       const row = rows[0] as { count?: number } | undefined;
       return row?.count ?? 0;
@@ -151,7 +156,10 @@ export function createVault<T extends Identifiable>(
 
     async create(input) {
       const rows = rowsOf(
-        await db.insert(table).values(input as Record<string, unknown>).returning(),
+        await db
+          .insert(table)
+          .values(input as Record<string, unknown>)
+          .returning(),
       );
       const row = rows[0];
       if (!row) throw new BrokkrError("postgres-vault: insert returned no rows");
@@ -172,7 +180,10 @@ export function createVault<T extends Identifiable>(
 
     async delete(id) {
       const rows = rowsOf(
-        await db.delete(table).where(eq(idColumn, id as never)).returning(),
+        await db
+          .delete(table)
+          .where(eq(idColumn, id as never))
+          .returning(),
       );
       return rows.length > 0;
     },

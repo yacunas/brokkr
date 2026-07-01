@@ -51,8 +51,7 @@ export interface WriteRepository<T, ID = string> {
 
 /** Full read + write repository. */
 export interface Repository<T extends Identifiable<ID>, ID = string>
-  extends ReadRepository<T, ID>,
-    WriteRepository<T, ID> {}
+  extends ReadRepository<T, ID>, WriteRepository<T, ID> {}
 
 /** Something that can report whether its backing connection is alive. */
 export interface HealthCheck {

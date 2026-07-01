@@ -1,15 +1,15 @@
 import { ClassCodec, ClassScalarCodec, type Codec } from "./codec";
 import type { DecodeContext, EncodeContext, JsonValue } from "./types";
 
-/** `Date` ⇄ ISO-8601 string. */
-class DateCodec extends ClassScalarCodec<Date, string> {
+/** `Date` ⇄ ISO-8601 string (or `null` for an invalid date, since `toISOString` throws). */
+class DateCodec extends ClassScalarCodec<Date, string | null> {
   readonly name = "Date";
   readonly ctor = Date;
-  encode(value: Date): string {
-    return value.toISOString();
+  encode(value: Date): string | null {
+    return Number.isNaN(value.getTime()) ? null : value.toISOString();
   }
-  decode(data: string): Date {
-    return new Date(data);
+  decode(data: string | null): Date {
+    return data === null ? new Date(NaN) : new Date(data);
   }
 }
 

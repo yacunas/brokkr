@@ -4,7 +4,7 @@
 
 `JSON.stringify` quietly loses information: `Date` becomes a string, `Map`/`Set`
 collapse to `{}`, `BigInt` throws, `undefined`/`NaN`/`Infinity` vanish. **serde-engine**
-round-trips all of them, lets you teach it your *own* types, reports exactly where
+round-trips all of them, lets you teach it your _own_ types, reports exactly where
 serialization failed, supports payload **versioning** for backward compatibility, and
 ships as a plain **injectable** class that fits any DI container (NestJS included).
 
@@ -29,11 +29,11 @@ pnpm add @brokkr/serde-engine
 import { serialize, deserialize } from "@brokkr/serde-engine";
 
 const wire = serialize({
-  id: 1n,                       // BigInt
+  id: 1n, // BigInt
   when: new Date("2026-01-01"), // Date
-  tags: new Set(["a", "b"]),    // Set
-  meta: new Map([["k", 1]]),    // Map
-  missing: undefined,           // undefined
+  tags: new Set(["a", "b"]), // Set
+  meta: new Map([["k", 1]]), // Map
+  missing: undefined, // undefined
 });
 
 const value = deserialize<typeof original>(wire);
@@ -61,8 +61,12 @@ import { ClassScalarCodec, Serde } from "@brokkr/serde-engine";
 class DecimalCodec extends ClassScalarCodec<Decimal, string> {
   readonly name = "Decimal";
   readonly ctor = Decimal;
-  encode(d: Decimal) { return d.toString(); }
-  decode(s: string) { return new Decimal(s); }
+  encode(d: Decimal) {
+    return d.toString();
+  }
+  decode(s: string) {
+    return new Decimal(s);
+  }
 }
 
 const serde = new Serde({ codecs: [new DecimalCodec()] });
@@ -71,13 +75,13 @@ serde.serialize({ price: new Decimal("9.99") }); // Decimal survives the round-t
 
 ### Base classes
 
-| Base | Use it when |
-| --- | --- |
-| `Codec<T, S>` | Full control — provide `serialize`/`deserialize` and `ctor` **or** `test`. |
-| `ClassCodec<T, S>` | Dispatch by `instanceof` — just set `ctor`. |
+| Base                     | Use it when                                                                         |
+| ------------------------ | ----------------------------------------------------------------------------------- |
+| `Codec<T, S>`            | Full control — provide `serialize`/`deserialize` and `ctor` **or** `match`.         |
+| `ClassCodec<T, S>`       | Dispatch by `instanceof` — just set `ctor`.                                         |
 | `ClassScalarCodec<T, S>` | The value maps to a single scalar (no nested values) — implement `encode`/`decode`. |
-| `VersionedCodec<T, S>` | The payload format evolves — see **Versioning**. |
-| `defineCodec({...})` | A quick codec without subclassing. |
+| `VersionedCodec<T, S>`   | The payload format evolves — see **Versioning**.                                    |
+| `defineCodec({...})`     | A quick codec without subclassing.                                                  |
 
 Codecs receive an `EncodeContext`/`DecodeContext` so they can recurse into nested
 values (`Map` and `Set` are implemented exactly this way):
@@ -86,7 +90,9 @@ values (`Map` and `Set` are implemented exactly this way):
 class BoxCodec extends ClassCodec<Box, { items: JsonValue }> {
   readonly name = "Box";
   readonly ctor = Box;
-  serialize(box: Box, ctx: EncodeContext) { return { items: ctx.encode(box.items) }; }
+  serialize(box: Box, ctx: EncodeContext) {
+    return { items: ctx.encode(box.items) };
+  }
   deserialize(data: { items: JsonValue }, ctx: DecodeContext) {
     return new Box(ctx.decode(data.items));
   }
@@ -103,15 +109,22 @@ When a codec's output shape changes, bump its `version` and migrate old payloads
 anything older, so `read()` only ever sees the current shape.
 
 ```ts
-interface MoneyV2 { cents: number; currency: string }
+interface MoneyV2 {
+  cents: number;
+  currency: string;
+}
 
 class MoneyCodec extends VersionedCodec<Money, MoneyV2> {
   readonly name = "Money";
   readonly ctor = Money;
   readonly version = 2;
 
-  write(m: Money): MoneyV2 { return { cents: m.cents, currency: m.currency }; }
-  read(d: MoneyV2): Money { return new Money(d.cents, d.currency); }
+  write(m: Money): MoneyV2 {
+    return { cents: m.cents, currency: m.currency };
+  }
+  read(d: MoneyV2): Money {
+    return new Money(d.cents, d.currency);
+  }
 
   // v1 stored whole dollars as a bare number.
   protected upgrade(old: JsonValue, from: number): MoneyV2 {
@@ -142,14 +155,14 @@ try {
 }
 ```
 
-| Error | `code` | Thrown when |
-| --- | --- | --- |
-| `UnsupportedTypeError` | `UNSUPPORTED_TYPE` | A `symbol` or `function` is encountered. |
-| `UnknownTypeError` | `UNKNOWN_TYPE` | A class instance has no registered codec. |
-| `UnknownTagError` | `UNKNOWN_TAG` | A payload names a codec that isn't registered. |
-| `CircularReferenceError` | `CIRCULAR_REFERENCE` | A value references one of its ancestors. |
-| `MaxDepthError` | `MAX_DEPTH_EXCEEDED` | Nesting exceeds `maxDepth`. |
-| `CodecError` | `CODEC_ERROR` | A codec threw; the original error is on `.cause`. |
+| Error                    | `code`               | Thrown when                                       |
+| ------------------------ | -------------------- | ------------------------------------------------- |
+| `UnsupportedTypeError`   | `UNSUPPORTED_TYPE`   | A `symbol` or `function` is encountered.          |
+| `UnknownTypeError`       | `UNKNOWN_TYPE`       | A class instance has no registered codec.         |
+| `UnknownTagError`        | `UNKNOWN_TAG`        | A payload names a codec that isn't registered.    |
+| `CircularReferenceError` | `CIRCULAR_REFERENCE` | A value references one of its ancestors.          |
+| `MaxDepthError`          | `MAX_DEPTH_EXCEEDED` | Nesting exceeds `maxDepth`.                       |
+| `CodecError`             | `CODEC_ERROR`        | A codec threw; the original error is on `.cause`. |
 
 ## Dependency injection / NestJS
 

@@ -67,10 +67,10 @@ export class UnknownTagError extends SerdeError {
     readonly tag: string,
     path: string,
   ) {
-    super(
-      `No codec registered for tag "${tag}" — register the codec that produced this payload`,
-      { path, phase: "deserialize" },
-    );
+    super(`No codec registered for tag "${tag}" — register the codec that produced this payload`, {
+      path,
+      phase: "deserialize",
+    });
   }
 }
 

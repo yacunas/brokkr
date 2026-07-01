@@ -51,7 +51,7 @@ export interface Runtime {
   /** Fast O(1) dispatch for constructor-based codecs. */
   byCtor: Map<Function, Codec>;
   /** Predicate-based codecs, scanned in registration order. */
-  tests: Codec[];
+  matchers: Codec[];
 }
 
 function findCodec(rt: Runtime, obj: object): Codec | undefined {
@@ -60,9 +60,9 @@ function findCodec(rt: Runtime, obj: object): Codec | undefined {
     const byCtor = rt.byCtor.get(ctor);
     if (byCtor !== undefined) return byCtor;
   }
-  for (let i = 0; i < rt.tests.length; i++) {
-    const codec = rt.tests[i]!;
-    if (codec.test!(obj)) return codec;
+  for (let i = 0; i < rt.matchers.length; i++) {
+    const codec = rt.matchers[i]!;
+    if (codec.match!(obj)) return codec;
   }
   return undefined;
 }
@@ -109,9 +109,7 @@ function asSerdeError(
   phase: SerdePhase,
 ): SerdeError {
   // Errors already produced deeper in the tree keep their precise path/context.
-  return err instanceof SerdeError
-    ? err
-    : new CodecError(codecName, path, phase, { cause: err });
+  return err instanceof SerdeError ? err : new CodecError(codecName, path, phase, { cause: err });
 }
 
 // ---------------------------------------------------------------------------
@@ -141,8 +139,14 @@ function enc(
     case "boolean":
       return value;
     case "number":
-      if (Number.isFinite(value)) return value;
-      return box(TAG.number, value === Infinity ? "Infinity" : value === -Infinity ? "-Infinity" : "NaN");
+      if (Number.isFinite(value)) {
+        // -0 is finite but JSON collapses it to 0; box it to preserve the sign.
+        return Object.is(value, -0) ? box(TAG.number, "-0") : value;
+      }
+      return box(
+        TAG.number,
+        value === Infinity ? "Infinity" : value === -Infinity ? "-Infinity" : "NaN",
+      );
     case "undefined":
       return box(TAG.undefined, 0);
     case "bigint":
@@ -194,7 +198,7 @@ function enc(
       let hasSentinel = false;
       for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
         if (k === SENTINEL) hasSentinel = true;
-        out[k] = enc(rt, seen, v, here, propSeg(k), depth + 1);
+        safeAssign(out, k, enc(rt, seen, v, here, propSeg(k), depth + 1));
       }
       return hasSentinel ? box(TAG.escape, out) : out;
     } finally {
@@ -207,6 +211,24 @@ function enc(
 
 function constructorName(value: object): string {
   return (value as { constructor?: { name?: string } }).constructor?.name ?? "Object";
+}
+
+/**
+ * Assign a property by key, treating a literal `"__proto__"` as an ordinary own
+ * data property instead of letting `target[key] = value` reassign the prototype.
+ * This keeps such keys round-tripping and blocks prototype-pollution on decode.
+ */
+function safeAssign(target: Record<string, unknown>, key: string, value: unknown): void {
+  if (key === "__proto__") {
+    Object.defineProperty(target, key, {
+      value,
+      writable: true,
+      enumerable: true,
+      configurable: true,
+    });
+  } else {
+    target[key] = value;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -249,9 +271,23 @@ function dec(
       case TAG.undefined:
         return undefined;
       case TAG.bigint:
-        return BigInt(payload as string);
+        try {
+          return BigInt(payload as string);
+        } catch (err) {
+          throw new SerdeError(
+            `Invalid BigInt payload ${JSON.stringify(payload)}`,
+            { path: format(here), phase: "deserialize" },
+            { cause: err },
+          );
+        }
       case TAG.number:
-        return payload === "Infinity" ? Infinity : payload === "-Infinity" ? -Infinity : NaN;
+        return payload === "Infinity"
+          ? Infinity
+          : payload === "-Infinity"
+            ? -Infinity
+            : payload === "-0"
+              ? -0
+              : NaN;
       case TAG.escape:
         return decPlain(rt, payload as Record<string, JsonValue>, here);
     }
@@ -281,7 +317,7 @@ function decPlain(
 ): Record<string, unknown> {
   const out: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(obj)) {
-    out[k] = dec(rt, v, here, propSeg(k), here.depth + 1);
+    safeAssign(out, k, dec(rt, v, here, propSeg(k), here.depth + 1));
   }
   return out;
 }

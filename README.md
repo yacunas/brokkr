@@ -6,12 +6,12 @@ A pnpm + Turborepo monorepo. Each library is published independently under the `
 
 ## Packages
 
-| Package | What it does |
-| --- | --- |
-| [`@brokkr/core`](packages/core) | Shared interfaces, contracts, and errors that the data libraries implement. Zero runtime deps. |
-| [`@brokkr/serde-engine`](packages/serde-engine) | Structured, extensible, versioned (de)serialization — round-trips `Date`/`Map`/`Set`/`BigInt`/…, custom codecs, injectable. Zero deps. |
-| [`@brokkr/mongo-vault`](packages/mongo-vault) | Mongoose-backed repository: read + write, find/list, cursor pagination, pluggable serializer. |
-| [`@brokkr/postgres-vault`](packages/postgres-vault) | Drizzle-backed Postgres repository — same shape as `mongo-vault`, different engine. |
+| Package                                             | What it does                                                                                                                           |
+| --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| [`@brokkr/core`](packages/core)                     | Shared interfaces, contracts, and errors that the data libraries implement. Zero runtime deps.                                         |
+| [`@brokkr/serde-engine`](packages/serde-engine)     | Structured, extensible, versioned (de)serialization — round-trips `Date`/`Map`/`Set`/`BigInt`/…, custom codecs, injectable. Zero deps. |
+| [`@brokkr/mongo-vault`](packages/mongo-vault)       | Mongoose-backed repository: read + write, find/list, cursor pagination, pluggable serializer.                                          |
+| [`@brokkr/postgres-vault`](packages/postgres-vault) | Drizzle-backed Postgres repository — same shape as `mongo-vault`, different engine.                                                    |
 
 ## Develop
 

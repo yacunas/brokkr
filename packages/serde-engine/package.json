@@ -4,7 +4,18 @@
   "description": "Structured, extensible, versioned serialization for TypeScript — round-trips Date/Map/Set/BigInt/RegExp/URL, custom codecs, precise errors, injectable. Zero dependencies.",
   "license": "MIT",
   "author": "Yronnel James",
-  "keywords": ["brokkr", "serde", "serialize", "deserialize", "json", "codec", "structured-clone", "bigint", "nestjs", "versioning"],
+  "keywords": [
+    "brokkr",
+    "serde",
+    "serialize",
+    "deserialize",
+    "json",
+    "codec",
+    "structured-clone",
+    "bigint",
+    "nestjs",
+    "versioning"
+  ],
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -21,13 +32,15 @@
       }
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yronneljames/brokkr.git",
+    "url": "git+https://github.com/yacunas/brokkr.git",
     "directory": "packages/serde-engine"
   },
   "scripts": {

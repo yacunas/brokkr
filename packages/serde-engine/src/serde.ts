@@ -34,7 +34,7 @@ export class Serde {
       maxDepth: config.maxDepth ?? DEFAULT_MAX_DEPTH,
       byName: new Map(),
       byCtor: new Map(),
-      tests: [],
+      matchers: [],
     };
     for (const codec of builtinCodecs) this.register(codec);
     if (config.codecs) for (const codec of config.codecs) this.register(codec);
@@ -50,8 +50,8 @@ export class Serde {
     if (RESERVED.has(codec.name)) {
       throw new SerdeError(`Codec name "${codec.name}" is reserved by the engine`);
     }
-    if (codec.ctor === undefined && codec.test === undefined) {
-      throw new SerdeError(`Codec "${codec.name}" must define a "ctor" or a "test" for dispatch`);
+    if (codec.ctor === undefined && codec.match === undefined) {
+      throw new SerdeError(`Codec "${codec.name}" must define a "ctor" or a "match" for dispatch`);
     }
     this.rt.byName.set(codec.name, codec);
     this.reindex();
@@ -88,10 +88,10 @@ export class Serde {
 
   private reindex(): void {
     this.rt.byCtor.clear();
-    this.rt.tests = [];
+    this.rt.matchers = [];
     for (const codec of this.rt.byName.values()) {
       if (codec.ctor !== undefined) this.rt.byCtor.set(codec.ctor, codec);
-      else if (codec.test !== undefined) this.rt.tests.push(codec);
+      else if (codec.match !== undefined) this.rt.matchers.push(codec);
     }
   }
 

@@ -33,6 +33,40 @@ export {
   type SerdePhase,
 } from "./errors";
 export { Serde, SERDE, provideSerde } from "./serde";
+export {
+  // third-party value classes (pass the class in — zero dependency)
+  stringableCodec,
+  decimalCodec,
+  bigNumberCodec,
+  bigCodec,
+  objectIdCodec,
+  luxonDateTimeCodec,
+  dayjsCodec,
+  type Stringable,
+  type LuxonDateTimeClass,
+  type DayjsFactory,
+  // native types (register directly)
+  typedArrayCodec,
+  bigIntArrayCodec,
+  uint8ArrayCodec,
+  int8ArrayCodec,
+  uint8ClampedArrayCodec,
+  int16ArrayCodec,
+  uint16ArrayCodec,
+  int32ArrayCodec,
+  uint32ArrayCodec,
+  float32ArrayCodec,
+  float64ArrayCodec,
+  bigInt64ArrayCodec,
+  bigUint64ArrayCodec,
+  arrayBufferCodec,
+  urlSearchParamsCodec,
+  errorCodec,
+  type ErrorShape,
+  // bundles
+  typedArrayCodecs,
+  nativeCodecs,
+} from "./presets";
 
 import { Serde } from "./serde";
 import type { JsonValue } from "./types";

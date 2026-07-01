@@ -1,9 +1,4 @@
-import type {
-  DecodeContext,
-  DecodeMeta,
-  EncodeContext,
-  JsonValue,
-} from "./types";
+import type { DecodeContext, DecodeMeta, EncodeContext, JsonValue } from "./types";
 
 /**
  * Teaches the engine how to round-trip one non-JSON-native type — a `Date`, a
@@ -12,7 +7,7 @@ import type {
  * value `T` and its on-the-wire payload `S`.
  *
  * Dispatch: provide {@link Codec.ctor} for O(1) constructor matching, or override
- * {@link Codec.test} for a custom predicate — the engine needs one of them.
+ * {@link Codec.match} for a custom predicate — the engine needs one of them.
  *
  * Override by name: registering a codec whose `name` already exists replaces the
  * previous one, which is how you swap out a built-in (e.g. a stricter `Date`).
@@ -39,11 +34,11 @@ export abstract class Codec<T = unknown, S extends JsonValue = JsonValue> {
    */
   readonly version: number = 1;
 
-  /** Constructor used for fast dispatch. Provide this or override {@link Codec.test}. */
+  /** Constructor used for fast dispatch. Provide this or override {@link Codec.match}. */
   readonly ctor?: Function;
 
-  /** Runtime predicate for dispatch when a constructor is not enough. */
-  test?(value: unknown): boolean;
+  /** Runtime predicate: does this codec handle `value`? Provide when a constructor is not enough. */
+  match?(value: unknown): boolean;
 
   /** Convert an instance into a JSON-safe payload; use `ctx.encode` for nesting. */
   abstract serialize(value: T, ctx: EncodeContext): S;
@@ -54,15 +49,12 @@ export abstract class Codec<T = unknown, S extends JsonValue = JsonValue> {
 
 /**
  * A {@link Codec} dispatched by `instanceof` on a constructor. Set `ctor` and the
- * `test` predicate is provided for you.
+ * `match` predicate is provided for you.
  */
-export abstract class ClassCodec<
-  T = unknown,
-  S extends JsonValue = JsonValue,
-> extends Codec<T, S> {
+export abstract class ClassCodec<T = unknown, S extends JsonValue = JsonValue> extends Codec<T, S> {
   abstract override readonly ctor: new (...args: any[]) => T;
 
-  override test = (value: unknown): boolean => value instanceof this.ctor;
+  override match = (value: unknown): boolean => value instanceof this.ctor;
 }
 
 /**
@@ -131,8 +123,7 @@ export abstract class VersionedCodec<
   }
 
   override deserialize(data: S, ctx: DecodeContext, meta: DecodeMeta): T {
-    const current =
-      meta.version < this.version ? this.upgrade(data, meta.version) : data;
+    const current = meta.version < this.version ? this.upgrade(data, meta.version) : data;
     return this.read(current, ctx);
   }
 }
@@ -142,14 +133,14 @@ export interface CodecSpec<T = unknown, S extends JsonValue = JsonValue> {
   name: string;
   version?: number;
   ctor?: Function;
-  test?: (value: unknown) => boolean;
+  match?: (value: unknown) => boolean;
   serialize: (value: T, ctx: EncodeContext) => S;
   deserialize: (data: S, ctx: DecodeContext, meta: DecodeMeta) => T;
 }
 
 /**
  * Build a {@link Codec} from a plain object — the terse alternative to subclassing
- * when you do not need inheritance. You must supply `ctor` or `test` for dispatch.
+ * when you do not need inheritance. You must supply `ctor` or `match` for dispatch.
  *
  * @example
  * const decimalCodec = defineCodec<Decimal, string>({
@@ -166,7 +157,7 @@ export function defineCodec<T = unknown, S extends JsonValue = JsonValue>(
     readonly name = spec.name;
     override readonly version = spec.version ?? 1;
     override readonly ctor = spec.ctor;
-    override test = spec.test;
+    override match = spec.match;
     serialize = spec.serialize;
     deserialize = spec.deserialize;
   })();

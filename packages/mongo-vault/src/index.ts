@@ -7,13 +7,7 @@
  */
 
 import { Types, type FilterQuery, type Model } from "mongoose";
-import type {
-  CursorPage,
-  Identifiable,
-  OffsetPage,
-  Paginated,
-  Repository,
-} from "@brokkr/core";
+import type { CursorPage, Identifiable, OffsetPage, Paginated, Repository } from "@brokkr/core";
 import { Serde, defineCodec } from "@brokkr/serde-engine";
 
 /**
@@ -25,7 +19,7 @@ const cursorSerde = new Serde({
   codecs: [
     defineCodec<Types.ObjectId, string>({
       name: "ObjectId",
-      test: (value) => value instanceof Types.ObjectId,
+      match: (value) => value instanceof Types.ObjectId,
       serialize: (value) => value.toHexString(),
       deserialize: (hex) => new Types.ObjectId(hex),
     }),

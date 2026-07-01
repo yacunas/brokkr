@@ -4,7 +4,14 @@
   "description": "Shared interfaces, contracts, and errors for the Brokkr libraries — the mold every adapter is cast against.",
   "license": "MIT",
   "author": "Yronnel James",
-  "keywords": ["brokkr", "repository", "contracts", "interfaces", "typescript", "pagination"],
+  "keywords": [
+    "brokkr",
+    "repository",
+    "contracts",
+    "interfaces",
+    "typescript",
+    "pagination"
+  ],
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -21,13 +28,15 @@
       }
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yronneljames/brokkr.git",
+    "url": "git+https://github.com/yacunas/brokkr.git",
     "directory": "packages/core"
   },
   "scripts": {

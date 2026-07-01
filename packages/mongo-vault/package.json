@@ -4,7 +4,17 @@
   "description": "Mongoose-backed repository: read + write, find/list, cursor pagination, and pluggable serialization — implements @brokkr/core.",
   "license": "MIT",
   "author": "Yronnel James",
-  "keywords": ["brokkr", "mongo", "mongodb", "mongoose", "repository", "pagination", "cursor", "odm", "vault"],
+  "keywords": [
+    "brokkr",
+    "mongo",
+    "mongodb",
+    "mongoose",
+    "repository",
+    "pagination",
+    "cursor",
+    "odm",
+    "vault"
+  ],
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -21,13 +31,15 @@
       }
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yronneljames/brokkr.git",
+    "url": "git+https://github.com/yacunas/brokkr.git",
     "directory": "packages/mongo-vault"
   },
   "scripts": {

@@ -3,12 +3,7 @@
  * `serialize` must return one of these; `deserialize` receives one back.
  */
 export type JsonValue =
-  | null
-  | boolean
-  | number
-  | string
-  | JsonValue[]
-  | { [key: string]: JsonValue };
+  null | boolean | number | string | JsonValue[] | { [key: string]: JsonValue };
 
 /** Handed to a codec's `serialize` so it can recurse into nested values. */
 export interface EncodeContext {
