@@ -1,20 +1,18 @@
 {
-  "name": "@brokkr/serde-engine",
+  "name": "@brokkr/cache",
   "version": "0.1.0",
-  "description": "Structured, extensible, versioned serialization for TypeScript — round-trips Date/Map/Set/BigInt/RegExp/URL, custom codecs, precise errors, injectable. Zero dependencies.",
+  "description": "A small caching abstraction for TypeScript — an async CacheStore interface, an LRU + TTL in-memory implementation, and a Cache wrapper with read-through single-flight and stale-while-revalidate. Zero dependencies.",
   "license": "MIT",
   "author": "Yronnel James",
   "keywords": [
     "brokkr",
-    "serde",
-    "serialize",
-    "deserialize",
-    "json",
-    "codec",
-    "structured-clone",
-    "bigint",
-    "nestjs",
-    "versioning"
+    "cache",
+    "lru",
+    "ttl",
+    "single-flight",
+    "stale-while-revalidate",
+    "memoize",
+    "read-through"
   ],
   "type": "module",
   "main": "./dist/index.cjs",
@@ -41,7 +39,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yacunas/brokkr.git",
-    "directory": "packages/serde-engine"
+    "directory": "packages/cache"
   },
   "scripts": {
     "build": "tsup",
@@ -52,8 +50,6 @@
     "clean": "rm -rf dist .turbo"
   },
   "devDependencies": {
-    "@types/node": "^22.9.0",
-    "decimal.js": "^10.4.3",
     "tsup": "^8.3.5",
     "typescript": "^5.6.3",
     "vitest": "^2.1.8"

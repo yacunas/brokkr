@@ -31,7 +31,9 @@ pnpm --filter @brokkr/serde-engine build
 pnpm --filter @brokkr/serde-engine test
 ```
 
-Tests use **Vitest**. Only `@brokkr/serde-engine` has tests currently.
+Tests use **Vitest**; every package except `core`/`postgres-vault` has a suite.
+`@brokkr/mongo-vault` runs integration tests against `mongodb-memory-server` (it
+downloads a mongod binary on first run — hence its longer `vitest.config.ts` timeouts).
 
 ```bash
 cd packages/serde-engine
@@ -87,6 +89,7 @@ The sentinel key is `$brokkr`; a plain object that literally contains it is esca
 (tag `"$"`) so decoding is never ambiguous.
 
 Files:
+
 - `engine.ts` — the recursive `enc`/`dec` walker. Owns cycle detection (`WeakSet`),
   the `maxDepth` guard, lazy path tracking for error messages (`$.a.b[0]`), and
   `safeAssign` (treats a literal `__proto__` key as a data property, not a prototype
@@ -104,6 +107,7 @@ Files:
   `serialize`/`deserialize`/`encode`/`decode`/`clone` bound to it.
 
 Key conventions when working here:
+
 - A **codec** identifies its values by `ctor` (O(1) constructor lookup, the fast path)
   or a `match(value)` predicate (scanned; for subclass/duck-typed matching). `ctor`-based
   codecs go in `byCtor`; `match`-based go in `matchers`. Do not confuse the codec

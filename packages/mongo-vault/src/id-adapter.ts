@@ -45,8 +45,7 @@ export const stringObjectIdAdapter: IdAdapter<string> = {
 /** Domain id is a native Mongoose `ObjectId`. Opt in when you need ObjectId semantics. */
 export const objectIdAdapter: IdAdapter<Types.ObjectId> = {
   toStorage: (id) => id,
-  fromStorage: (raw) =>
-    raw instanceof Types.ObjectId ? raw : new Types.ObjectId(String(raw)),
+  fromStorage: (raw) => (raw instanceof Types.ObjectId ? raw : new Types.ObjectId(String(raw))),
   generate: () => new Types.ObjectId(),
   is: (value): value is Types.ObjectId => value instanceof Types.ObjectId,
   codec: defineCodec<Types.ObjectId, string>({

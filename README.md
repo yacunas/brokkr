@@ -6,12 +6,30 @@ A pnpm + Turborepo monorepo. Each library is published independently under the `
 
 ## Packages
 
-| Package                                             | What it does                                                                                                                           |
-| --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| [`@brokkr/core`](packages/core)                     | Shared interfaces, contracts, and errors that the data libraries implement. Zero runtime deps.                                         |
-| [`@brokkr/serde-engine`](packages/serde-engine)     | Structured, extensible, versioned (de)serialization — round-trips `Date`/`Map`/`Set`/`BigInt`/…, custom codecs, injectable. Zero deps. |
-| [`@brokkr/mongo-vault`](packages/mongo-vault)       | Mongoose-backed repository: read + write, find/list, cursor pagination, pluggable serializer.                                          |
-| [`@brokkr/postgres-vault`](packages/postgres-vault) | Drizzle-backed Postgres repository — same shape as `mongo-vault`, different engine.                                                    |
+**Data & serialization**
+
+| Package                                         | What it does                                                                                                                                  |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`@brokkr/serde-engine`](packages/serde-engine) | Structured, extensible, versioned (de)serialization — round-trips `Date`/`Map`/`Set`/`BigInt`/…, custom codecs, injectable. Zero deps.        |
+| [`@brokkr/mongo-vault`](packages/mongo-vault)   | Fully-typed, GraphQL-ready Mongoose data layer — typed filter/sort/projection, keyset cursor pagination, pluggable id adapters, typed errors. |
+| [`@brokkr/rune`](packages/rune)                 | GraphQL toolkit — Relay connections, common scalars, and resolve-info → projection that feeds `mongo-vault`.                                  |
+| [`@brokkr/dataloader`](packages/dataloader)     | Batching + per-request caching to eliminate N+1.                                                                                              |
+
+**Backend building blocks** (all zero-dependency)
+
+| Package                                 | What it does                                                                                             |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [`@brokkr/result`](packages/result)     | Typed `Result`/`Either` — errors as values, no exceptions.                                               |
+| [`@brokkr/throttle`](packages/throttle) | Concurrency limiting (bounded pool, `mapLimit`) + rate limiting (token-bucket / sliding / fixed window). |
+| [`@brokkr/retry`](packages/retry)       | Resilience — retry with backoff + jitter, timeout, circuit breaker.                                      |
+| [`@brokkr/cache`](packages/cache)       | Cache abstraction — TTL + LRU, single-flight `wrap`, stale-while-revalidate, pluggable store.            |
+| [`@brokkr/config`](packages/config)     | Typed env/config loader — coercion, validation, defaults, one aggregated error.                          |
+| [`@brokkr/logger`](packages/logger)     | Structured logging — levels, child/context loggers, redaction, pluggable sink.                           |
+| [`@brokkr/events`](packages/events)     | Strongly-typed event emitter — sync/async emit, error isolation.                                         |
+| [`@brokkr/guard`](packages/guard)       | Authorization — RBAC + lightweight ABAC, deny precedence, typed checks.                                  |
+
+> `@brokkr/core` and `@brokkr/postgres-vault` remain in the tree but are not the
+> focus; the active data path is `mongo-vault` + `rune`.
 
 ## Develop
 

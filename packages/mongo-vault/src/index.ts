@@ -19,12 +19,7 @@
  */
 
 export { Vault, MongoVault, createMongoVault, type MongoVaultOptions } from "./vault";
-export {
-  type IdAdapter,
-  stringObjectIdAdapter,
-  objectIdAdapter,
-  uuidAdapter,
-} from "./id-adapter";
+export { type IdAdapter, stringObjectIdAdapter, objectIdAdapter, uuidAdapter } from "./id-adapter";
 export {
   MongoVaultError,
   DuplicateKeyError,

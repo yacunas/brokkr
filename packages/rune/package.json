@@ -1,20 +1,18 @@
 {
-  "name": "@brokkr/serde-engine",
+  "name": "@brokkr/rune",
   "version": "0.1.0",
-  "description": "Structured, extensible, versioned serialization for TypeScript — round-trips Date/Map/Set/BigInt/RegExp/URL, custom codecs, precise errors, injectable. Zero dependencies.",
+  "description": "GraphQL toolkit — Relay connections, common scalars, and resolve-info projection",
   "license": "MIT",
   "author": "Yronnel James",
   "keywords": [
     "brokkr",
-    "serde",
-    "serialize",
-    "deserialize",
-    "json",
-    "codec",
-    "structured-clone",
-    "bigint",
-    "nestjs",
-    "versioning"
+    "graphql",
+    "relay",
+    "connection",
+    "cursor",
+    "scalar",
+    "projection",
+    "nestjs"
   ],
   "type": "module",
   "main": "./dist/index.cjs",
@@ -41,7 +39,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yacunas/brokkr.git",
-    "directory": "packages/serde-engine"
+    "directory": "packages/rune"
   },
   "scripts": {
     "build": "tsup",
@@ -51,9 +49,12 @@
     "test:watch": "vitest",
     "clean": "rm -rf dist .turbo"
   },
+  "peerDependencies": {
+    "graphql": ">=16"
+  },
   "devDependencies": {
     "@types/node": "^22.9.0",
-    "decimal.js": "^10.4.3",
+    "graphql": "^16.9.0",
     "tsup": "^8.3.5",
     "typescript": "^5.6.3",
     "vitest": "^2.1.8"

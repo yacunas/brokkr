@@ -4,7 +4,16 @@
   "description": "Concurrency limiting and rate limiting for TypeScript — bounded pools, ordered mapLimit, and token-bucket / sliding-window / fixed-window rate limiters with a pluggable store. Zero dependencies.",
   "license": "MIT",
   "author": "Yronnel James",
-  "keywords": ["brokkr", "throttle", "rate-limit", "concurrency", "token-bucket", "sliding-window", "semaphore", "backpressure"],
+  "keywords": [
+    "brokkr",
+    "throttle",
+    "rate-limit",
+    "concurrency",
+    "token-bucket",
+    "sliding-window",
+    "semaphore",
+    "backpressure"
+  ],
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -21,7 +30,9 @@
       }
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },

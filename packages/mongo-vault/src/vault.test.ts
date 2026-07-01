@@ -205,7 +205,9 @@ describe("sort, projection, update, delete", () => {
     const { id } = await vault.create(makeWidget({ price: 1 }));
     const updated = await vault.update(id, { price: 999 });
     expect(updated?.price).toBe(999);
-    expect(await vault.update(new mongoose.Types.ObjectId().toHexString(), { price: 1 })).toBeNull();
+    expect(
+      await vault.update(new mongoose.Types.ObjectId().toHexString(), { price: 1 }),
+    ).toBeNull();
   });
 
   it("deletes and reports whether a document was removed", async () => {
@@ -299,7 +301,10 @@ describe("cursor pagination", () => {
 
   it("returns totalCount when asked, and applies the filter to it", async () => {
     const vault = await seed(widgets(), 20);
-    const page = await vault.paginate({ first: 5 }, { where: { price: { gte: 10 } }, totalCount: true });
+    const page = await vault.paginate(
+      { first: 5 },
+      { where: { price: { gte: 10 } }, totalCount: true },
+    );
     expect(page.edges).toHaveLength(5);
     expect(page.totalCount).toBe(10);
   });

@@ -42,11 +42,11 @@ await limiter.assert(`user:${userId}`); // throws RateLimitError when denied
 
 ### Algorithms
 
-| `algorithm` | Behavior | Use when |
-| --- | --- | --- |
-| `token-bucket` (default) | Smooth; allows short bursts, refills continuously | General API throttling |
-| `sliding-window` | Precise rolling window (timestamp log) | Strict fairness matters |
-| `fixed-window` | Cheapest; counters reset on boundaries | High volume, edge bursts OK |
+| `algorithm`              | Behavior                                          | Use when                    |
+| ------------------------ | ------------------------------------------------- | --------------------------- |
+| `token-bucket` (default) | Smooth; allows short bursts, refills continuously | General API throttling      |
+| `sliding-window`         | Precise rolling window (timestamp log)            | Strict fairness matters     |
+| `fixed-window`           | Cheapest; counters reset on boundaries            | High volume, edge bursts OK |
 
 ### Pluggable store
 

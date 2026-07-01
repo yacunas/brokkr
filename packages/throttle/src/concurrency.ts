@@ -99,10 +99,12 @@ export function settleLimit<T, R>(
 ): Promise<PromiseSettledResult<R>[]> {
   const p = pool(concurrency);
   const tasks = [...items].map((item, index) =>
-    p.run(() => fn(item, index)).then(
-      (value): PromiseSettledResult<R> => ({ status: "fulfilled", value }),
-      (reason): PromiseSettledResult<R> => ({ status: "rejected", reason }),
-    ),
+    p
+      .run(() => fn(item, index))
+      .then(
+        (value): PromiseSettledResult<R> => ({ status: "fulfilled", value }),
+        (reason): PromiseSettledResult<R> => ({ status: "rejected", reason }),
+      ),
   );
   return Promise.all(tasks);
 }
