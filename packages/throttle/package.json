@@ -1,20 +1,10 @@
 {
-  "name": "@brokkr/mongo-vault",
+  "name": "@brokkr/throttle",
   "version": "0.1.0",
-  "description": "Fully-typed, GraphQL-ready Mongoose data-access layer: typed filter/sort/projection, keyset cursor pagination, pluggable id adapters, typed errors.",
+  "description": "Concurrency limiting and rate limiting for TypeScript — bounded pools, ordered mapLimit, and token-bucket / sliding-window / fixed-window rate limiters with a pluggable store. Zero dependencies.",
   "license": "MIT",
   "author": "Yronnel James",
-  "keywords": [
-    "brokkr",
-    "mongo",
-    "mongodb",
-    "mongoose",
-    "repository",
-    "pagination",
-    "cursor",
-    "odm",
-    "vault"
-  ],
+  "keywords": ["brokkr", "throttle", "rate-limit", "concurrency", "token-bucket", "sliding-window", "semaphore", "backpressure"],
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -31,16 +21,14 @@
       }
     }
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "publishConfig": {
     "access": "public"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yacunas/brokkr.git",
-    "directory": "packages/mongo-vault"
+    "directory": "packages/throttle"
   },
   "scripts": {
     "build": "tsup",
@@ -50,16 +38,7 @@
     "test:watch": "vitest",
     "clean": "rm -rf dist .turbo"
   },
-  "dependencies": {
-    "@brokkr/serde-engine": "workspace:*"
-  },
-  "peerDependencies": {
-    "mongoose": ">=7"
-  },
   "devDependencies": {
-    "@types/node": "^22.9.0",
-    "mongodb-memory-server": "^10.1.2",
-    "mongoose": "^8.8.1",
     "tsup": "^8.3.5",
     "typescript": "^5.6.3",
     "vitest": "^2.1.8"
