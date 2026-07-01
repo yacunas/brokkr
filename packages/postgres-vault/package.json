@@ -1,0 +1,52 @@
+{
+  "name": "@brokkr/postgres-vault",
+  "version": "0.1.0",
+  "description": "Drizzle-backed Postgres repository: read + write, find/list, cursor pagination, and pluggable serialization — implements @brokkr/core.",
+  "license": "MIT",
+  "author": "Yronnel James",
+  "keywords": ["brokkr", "postgres", "postgresql", "pg", "drizzle", "repository", "pagination", "cursor", "vault"],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yronneljames/brokkr.git",
+    "directory": "packages/postgres-vault"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "@brokkr/core": "workspace:*",
+    "@brokkr/serde-engine": "workspace:*"
+  },
+  "peerDependencies": {
+    "drizzle-orm": ">=0.30"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "drizzle-orm": "^0.36.4",
+    "tsup": "^8.3.5",
+    "typescript": "^5.6.3"
+  }
+}
